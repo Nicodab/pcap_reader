@@ -3,10 +3,6 @@ package src;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.lang.IllegalArgumentException;
-import java.nio.ByteBuffer;
-
-import src.TransportTypes;
-import src.Dns;
 
 public class Tcp {
     private int portSrc; // header IPv4 de 2 octets,il donne la taille du paquets en octets
@@ -32,14 +28,14 @@ public class Tcp {
     // Faire une classe ARP dans laquelle il y aurait cette fonction ainsi que ses propres attributs
     public int readTcp(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         int bytesCountTcp = 0;
-        System.out.println("----------- TCP segment -----------");
+        System.out.println("\n----------- TCP segment -----------");
         // portSrc 
         byte [] portSrcBuffer = new byte[2]; // Protocol type: 2 octets
         int srcBytes = (int)dataInputStream.read(portSrcBuffer);
         bytesCountTcp += srcBytes;
         packetByteCount += srcBytes;
         this.portSrc = convertirEnDecimal(portSrcBuffer);
-        System.out.println("Source Port: " + this.portSrc);
+        System.out.println("> Source Port: " + this.portSrc);
 
         // portDest
         byte [] portDestBuffer = new byte[2]; // Protocol type: 2 octets
@@ -47,7 +43,7 @@ public class Tcp {
         bytesCountTcp += destBytes;
         packetByteCount += destBytes;
         this.portDest = convertirEnDecimal(portDestBuffer);
-        System.out.println("Destination Port: " + this.portDest);
+        System.out.println("> Destination Port: " + this.portDest);
 
         // nbSequence
         byte [] nbSequenceBuffer = new byte[4]; // Protocol type: 4 octets
@@ -56,7 +52,7 @@ public class Tcp {
         packetByteCount += seqBytes;
 
         this.nbSeq = (long)convertirEnDecimal(nbSequenceBuffer);
-        System.out.println("Sequence Number: " + this.nbSeq);
+        System.out.println("> Sequence Number: " + this.nbSeq);
 
         // nbAcknoledgement
         byte [] nbAckBuffer = new byte[4]; // Protocol type: 4 octets
@@ -64,7 +60,7 @@ public class Tcp {
         bytesCountTcp += ackBytes;
         packetByteCount += ackBytes;
         this.nbAck = (long)convertirEnDecimal(nbAckBuffer);
-        System.out.println("Acknoledgment Number: " + this.nbAck);
+        System.out.println("> Acknoledgment Number: " + this.nbAck);
 
         //packetByteCount += dataInputStream.skip(1); // On saute data offset (4bits) et reserved (4bits)
 
@@ -82,12 +78,12 @@ public class Tcp {
         // *4 car ça nous donne le nb de word à 32 bit dans le segment
         // --> 32 bits = 4 octets, donc dataOffsetDecimalValue est le nb d'octets contenue dans les data du segments tcp
         this.dataOffsetDecimalValue = fourBitsToDecimal(this.dataOffset) * 4;
-        System.out.println("Data Offset: " + this.dataOffsetDecimalValue + "octets");
+        System.out.println("> Data Offset: " + this.dataOffsetDecimalValue + " octets");
         
         // FLAGS
         // Ce qui nous intéresse ça va être juste flag[]
         // flag[2]=URG, flag[3]=ACK flag=[4]=PSH, flag[5]=RST; flag[6]=SYN, flag[7]=FIN
-        System.out.print("The flags set are: ");
+        System.out.print("> The flags set are: ");
         byte [] flagsBuffer = new byte[1]; // flags: 1 octet
         int flagBytes = (int)dataInputStream.read(flagsBuffer);
         bytesCountTcp += flagBytes;
@@ -165,5 +161,4 @@ public class Tcp {
     public int calculatePayloadLength(int totalLength, int dataOffset){
         return (totalLength - 20 - dataOffset);
     }
-
 }

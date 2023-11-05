@@ -19,7 +19,7 @@ public class DnsQuestion {
     }
 
     public int readQuestionSection(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
-        
+        System.out.println("\n\t##### DNS Question #####");
         // QNAME
         while (labelSize != 0){
             byte [] labelSizeBuffer = new byte[1];
@@ -43,7 +43,7 @@ public class DnsQuestion {
         }
         // 
         this.label = label.substring(0, this.label.length() - 1);//Supprime le dernier point rajouter en trop
-        System.out.println("Query Name: " + this.label);
+        System.out.println("\t# Query Name: " + this.label);
 
         // QType
         byte [] qTypeBuffer = new byte[2];
@@ -53,7 +53,7 @@ public class DnsQuestion {
             qTypeSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.qType = qTypeSB.toString();
-        System.out.println("type: " + this.qType);
+        System.out.println("\t# Type: " + this.qType);
 
         
         // QClass
@@ -64,7 +64,7 @@ public class DnsQuestion {
             qClassSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.qClass = qClassSB.toString();
-        System.out.println("class: " + this.qClass);
+        System.out.println("\t# Class: " + this.qClass);
 
 
         return packetByteCount; // On renvoit sa valeur pour mettre à jour le nombre de d'octet à lire plus haut (dans le DNS)

@@ -34,7 +34,7 @@ public class Arp {
     public void readARP(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         // byte [] macAdressDest = new byte[6]; // Le BUFFER "capturePacketLength" fait 4 octets quoi qu'il arrive suite au 24 octets skippés
         // int macAdressDestRead = dataInputStream.read(macAdressDest);
-        System.out.println("----------- ARP Packet -----------");
+        System.out.println("\n----------- ARP Packet -----------");
         // On saute le harware type
         packetByteCount += (int)dataInputStream.skip(2); // Hardwaretype non intéressant pour le projet | cast en int car ça renvoie unlong
         byte [] protocolType = new byte[2]; // Protocol type: 2 octets
@@ -49,7 +49,7 @@ public class Arp {
         if (this.protocolType.equals("0800")) System.out.println("Protocol Type: IPv4");
         //Si c'est pas del'IP --> On l'affiche en brute
         else {
-            System.out.print("Protocol Type: ");
+            System.out.print("> Protocol Type: ");
             for (byte b : protocolType)
                 System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
         }
@@ -65,14 +65,14 @@ public class Arp {
             hexOperationString.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         this.operation = hexOperationString.toString();
         if (this.operation.equals("0001")) System.out.println("Operation: Request");
-        else System.out.println("Operation: Reply");
+        else System.out.println("> Operation: Reply");
 
         int compteurMac = 0;
         //Read capturePacketLength
         byte [] macAdressSrc = new byte[6]; // Le BUFFER "capturePacketLength" fait 4 octets quoi qu'il arrive suite au 24 octets skippés
         packetByteCount += dataInputStream.read(macAdressSrc);
         StringBuilder macSrcSB = new StringBuilder();
-        System.out.print("Sender Mac: ");
+        System.out.print("> Sender Mac: ");
         // Affichez les octets inversés en décimal
         for (byte b : macAdressSrc) {
             //System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
@@ -91,7 +91,7 @@ public class Arp {
         packetByteCount += dataInputStream.read(ipSender);
         StringBuilder ipSrcSB = new StringBuilder();
         // Affichez les octets inversés en décimal
-        System.out.print("Sender IP: ");
+        System.out.print("> Sender IP: ");
         for (byte b : ipSender) {
             //System.out.printf("%d", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
             ipSrcSB.append(String.format("%d", b & 0xFF));
@@ -106,7 +106,7 @@ public class Arp {
         byte [] macAdressDest = new byte[6]; // Le BUFFER "capturePacketLength" fait 4 octets quoi qu'il arrive suite au 24 octets skippés
         packetByteCount += dataInputStream.read(macAdressDest);
         StringBuilder macDestSB = new StringBuilder();
-        System.out.print("Destination Mac: ");
+        System.out.print("> Destination Mac: ");
         // Affichez les octets inversés en décimal
         for (byte b : macAdressDest) {
             //System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
@@ -124,7 +124,7 @@ public class Arp {
         packetByteCount += dataInputStream.read(ipDest);
         StringBuilder ipDestSB = new StringBuilder();
         // Affichez les octets inversés en décimal
-        System.out.print("Destination IP: ");
+        System.out.print("> Destination IP: ");
         for (byte b : ipDest) {
             ipDestSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
             compteurIp +=  1;
@@ -134,13 +134,8 @@ public class Arp {
         this.ipDest = ipDestSB.toString();
         // dataInputStream.skip(6); // skip 6 car on en a lu 6
         System.out.println(this.ipDest);
-        System.out.println();
-        System.out.println("packetBytesCount: " + packetByteCount);
         dataInputStream.skip(packetLength-packetByteCount); // on lit la diff (si y'a du padding)
-        System.out.println(packetLength-packetByteCount);
         packetByteCount += packetLength-packetByteCount;
-        System.out.println("bytes read: " + packetByteCount);
-        System.out.println("------------------------------");
         // C'est bon on arrive à gérer le padding proprement pour terminer le paquet donc go schématiser tout ça et faire des classes propres avec de l'héritage
     }
 }

@@ -48,7 +48,7 @@ public class Ethernet {
         byte [] timestamp = new byte[4]; // Le BUFFER "timestamp" fait 4 octets quoi qu'il arrive suite au 24 octets skippés
         int timestampRead = dataInputStream.read(timestamp);
         if (timestampRead == -1 ) return false; // Plus rien à lire
-        System.out.println("*****************************************");
+        System.out.println("\n*****************************************");
         System.out.println("*\t\tFRAME n°" + nbFrame + "\t\t*");
         System.out.println("*****************************************");
         System.out.println("Timestamp: " + String.valueOf(inverserEtConvertir(timestamp)) + "s");
@@ -60,7 +60,7 @@ public class Ethernet {
         int capturePacketLengthRead = dataInputStream.read(capturePacketLength);
         // On initialise ici le packetLength de la classe Ethernet
         this.packetLength = inverserEtConvertir(capturePacketLength); // --> A réutiliser pour compter jusqu'à ce qu'on arrive bien à la fin du paquets pour passer à la suivante
-        System.out.println("Capture packet length: " + String.valueOf(inverserEtConvertir(capturePacketLength)) + " octets\n");
+        System.out.println("> Capture packet length: " + String.valueOf(inverserEtConvertir(capturePacketLength)) + " octets");
         dataInputStream.skip(4); // skip 4 car les 4 octets suivants ne sont pas intéressant 
         
         int compteurMac = 0;
@@ -69,7 +69,7 @@ public class Ethernet {
         // C'est à partir de ici qu'on compte les données de la trame ethernet
         // Car après le packet length on sait cmb d'octets on va lire
         packetByteCount += dataInputStream.read(macAdressDest);
-        System.out.print("Destination Mac: ");
+        System.out.print("> Destination Mac: ");
         StringBuilder macDestSB = new StringBuilder();
         // Affichez les octets inversés en décimal
         for (byte b : macAdressDest) {
@@ -88,7 +88,7 @@ public class Ethernet {
         packetByteCount += dataInputStream.read(macAdressSrc);
         StringBuilder macSrcSB = new StringBuilder();
         // Affichez les octets inversés en décimal
-        System.out.print("Source Mac: ");
+        System.out.print("> Source Mac: ");
         for (byte b : macAdressSrc) {
             System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
             macSrcSB.append(String.format("%02X", b & 0xFF));
@@ -102,7 +102,7 @@ public class Ethernet {
         byte [] etherTypeBuffer = new byte[2]; // Le BUFFER "etherType" fait 2 octets
         packetByteCount += dataInputStream.read(etherTypeBuffer);
         StringBuilder etherTypeSb = new StringBuilder();
-        System.out.print("Ether Type: ");
+        System.out.print("> Ether Type: ");
         for (byte b : etherTypeBuffer) {
             System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
             etherTypeSb.append(String.format("%02X", b & 0xFF));

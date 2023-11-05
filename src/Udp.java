@@ -23,7 +23,7 @@ public class Udp {
     // Faire une classe ARP dans laquelle il y aurait cette fonction ainsi que ses propres attributs
     public void readUdp(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         
-        System.out.println("----------- UDP segment -----------");
+        System.out.println("\n----------- UDP segment -----------");
         // portSrc 
         byte [] portSrcBuffer = new byte[2]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(portSrcBuffer);
@@ -39,7 +39,7 @@ public class Udp {
         this.portSrc = con(Integer.valueOf(portSrcSB.toString()));*/
         
         this.portSrc = convertirEnDecimal(portSrcBuffer);
-        System.out.println("Source Port: " + this.portSrc);
+        System.out.println("> Source Port: " + this.portSrc);
         // portDest 
         byte [] portDestBuffer = new byte[2]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(portDestBuffer);
@@ -49,7 +49,7 @@ public class Udp {
         
         this.portDest = Integer.valueOf(portDestSB.toString());*/
         this.portDest = convertirEnDecimal(portDestBuffer);
-        System.out.println("Destination Port: " + this.portDest);
+        System.out.println("> Destination Port: " + this.portDest);
         // Length 
         byte [] lengthBuffer = new byte[2]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(lengthBuffer);
@@ -58,7 +58,7 @@ public class Udp {
             lengthSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.length = Integer.valueOf(lengthSB.toString());
-        System.out.println("Length: " + this.length);
+        System.out.println("> Length: " + this.length);
 
         // On saute: checksum (2octets)
         packetByteCount += (int)dataInputStream.skip(2);
@@ -83,7 +83,7 @@ public class Udp {
         // Pour lire la suite on part du principe que y'a pas d'options IPV4 (en réalité y'a que des options IPv4 si l'IHL est > 5)
         // En vrai go faire un if IHL < 5 faire ça et sinon mettre un msg pour dire que c'est pas supporté
         else{
-            System.out.println("dest port n°" + portDest + ", " + "src port n°" + portSrc);
+            //System.out.println("dest port n°" + portDest + ", " + "src port n°" + portSrc);
             dataInputStream.skip(packetLength-packetByteCount);
         }
     }

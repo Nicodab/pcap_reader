@@ -34,49 +34,47 @@ public class Dhcp {
     // Faire une classe ARP dans laquelle il y aurait cette fonction ainsi que ses propres attributs
     public int readDhcp(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         //int bytesCountTcp = 0;
-        System.out.println("----------- DHCP protocol -----------");
+        System.out.println("\n----------- DHCP protocol -----------");
         // Message Type 
         byte [] messageTypeBuffer = new byte[1]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(messageTypeBuffer);
         this.messageType = convertirEnDecimal(messageTypeBuffer);
-        System.out.println("Message Type: " + this.messageType);
+        System.out.println("> Message Type: " + this.messageType);
 
         // Hardware Type 
         byte [] hardwareTypeBuffer = new byte[1]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(hardwareTypeBuffer);
         this.hardwareType = convertirEnDecimal(hardwareTypeBuffer);
-        System.out.println("Hardware Type: " + this.hardwareType);
+        System.out.println("> Hardware Type: " + this.hardwareType);
 
         // Hardware Length 
         byte [] hardwareLengthBuffer = new byte[1]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(hardwareLengthBuffer);
         this.hardwareLength = convertirEnDecimal(hardwareLengthBuffer);
-        System.out.println("Hardware Length: " + this.hardwareLength);
+        System.out.println("> Hardware Length: " + this.hardwareLength);
 
         // hops 
         byte [] hopsBuffer = new byte[1]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(hopsBuffer);
         this.hops = convertirEnDecimal(hopsBuffer);
-        System.out.println("Hops: " + this.hops);
+        System.out.println("> Hops: " + this.hops);
 
         // portSrc 
         byte [] xidBuffer = new byte[4]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(xidBuffer);
-        //this.xid = convertirEnDecimalLong(xidBuffer);
         StringBuilder xidSB = new StringBuilder();
         // Affichez les octets inversés en décimal
         for (byte b : xidBuffer) {
-           // System.out.printf("%02X", b & 0xFF); // Masquage avec 0xFF pour afficher en décimal
             xidSB.append(String.format("%02X", b & 0xFF));
         }
         this.xid = xidSB.toString(); // affectation à l'attribut de la classe 
-        System.out.println("Transaction ID: " + this.xid);
+        System.out.println("> Transaction ID: " + this.xid);
 
         // portSrc 
         byte [] secondElapsedBuffer = new byte[2]; // Protocol type: 2 octets
         packetByteCount += (int)dataInputStream.read(secondElapsedBuffer);
         this.secondElapsed = convertirEnDecimal(secondElapsedBuffer);
-        System.out.println("Second Elapsed: " + this.secondElapsed);
+        System.out.println("> Second Elapsed: " + this.secondElapsed);
 
         // On saute les flags (2 octets)
         packetByteCount += (int)dataInputStream.skip(packetByteCount);
@@ -94,7 +92,7 @@ public class Dhcp {
         }
         compteurIp = 0;
         this.clientAddress = clientAddressSB.toString();
-        System.out.println("Client IP Address: " + this.clientAddress);
+        System.out.println("> Client IP Address: " + this.clientAddress);
 
         // yourClientAdress
         byte [] yourClientAdressBuffer = new byte[4]; // Protocol type: 2 octets
@@ -108,7 +106,7 @@ public class Dhcp {
             
         compteurIp = 0;
         this.yourClientAdress = yourClientAdressSB.toString();
-        System.out.println("'Your' Client IP Adress: " + this.yourClientAdress);
+        System.out.println("> 'Your' Client IP Adress: " + this.yourClientAdress);
 
         // nextServerAddress
         byte [] nextServerAddressBuffer = new byte[4]; // Protocol type: 2 octets
@@ -122,7 +120,7 @@ public class Dhcp {
             
         compteurIp = 0;
         this.nextServerAddress = nextServerAddress.toString();
-        System.out.println("Next Server IP Adress: " + this.yourClientAdress);
+        System.out.println("> Next Server IP Adress: " + this.yourClientAdress);
 
         // relayAgentAddress
         byte [] relayAgentAddressBuffer = new byte[4]; // Protocol type: 2 octets
@@ -137,7 +135,7 @@ public class Dhcp {
         compteurIp = 0;
         this.relayAgentAddress = relayAgentAddress.toString();
         if (this.relayAgentAddress.isEmpty()) System.out.println("Relay Agent IP Adress: None");
-        else System.out.println("Relay Agent IP Adress: " + this.relayAgentAddress);
+        else System.out.println("> Relay Agent IP Adress: " + this.relayAgentAddress);
 
         // Pour l'instant on skippe le reste ici
         // sauf les options de 312 octets potentiellemnt carc'est variable
@@ -147,7 +145,7 @@ public class Dhcp {
         return packetByteCount;
     }
 
-    // Retourne la valeur décimak d'une séquence/bloc d'octets
+    // Retourne la valeur décimal d'une séquence/bloc d'octets
     public static int convertirEnDecimal(byte[] byteArray) {
         int decimalValue = 0; // Initialiser la valeur décimale à zéro
         for (int i = 0; i < byteArray.length; i++) {
@@ -157,7 +155,7 @@ public class Dhcp {
         return decimalValue;
     }
 
-    // Retourne la valeur décimak d'une séquence/bloc d'octets
+    // Retourne la valeur décimal d'une séquence/bloc d'octets
     public static long convertirEnDecimalLong(byte[] byteArray) {
         long decimalValue = 0; // Initialiser la valeur décimale à zéro
         for (int i = 0; i < byteArray.length; i++) {

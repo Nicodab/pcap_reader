@@ -13,7 +13,7 @@ public class DnsAdditionalRR {
     }
 
     public int readAdditionalRecordSection(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
-        System.out.println("<Additional Record>");
+        System.out.println("\n\t##### Additional Record #####");
         // Name
         byte [] nameBuffer = new byte[1];
         packetByteCount += (int)dataInputStream.read(nameBuffer);
@@ -22,7 +22,7 @@ public class DnsAdditionalRR {
             nameSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.name = nameSB.toString();
-        System.out.println("name: " + this.name);
+        System.out.println("\t# Name: " + this.name);
         // type
         byte [] typeBuffer = new byte[2];
         packetByteCount += (int)dataInputStream.read(typeBuffer);
@@ -31,7 +31,7 @@ public class DnsAdditionalRR {
             typeSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.type = typeSB.toString();
-        System.out.println("type: " + this.type);
+        System.out.println("\t# Type: " + this.type);
 
         return packetByteCount;
     }

@@ -37,7 +37,7 @@ public class IPv4 {
     // Faire une classe ARP dans laquelle il y aurait cette fonction ainsi que ses propres attributs
     public void readIPv4(DataInputStream dataInputStream, int packetLength, int packetByteCount, String filter) throws IOException {
         
-        System.out.println("----------- IPv4 Packet -----------");
+        System.out.println("\n----------- IPv4 Packet -----------");
         // On saute: la version (4 bits), IHL (4 bits), DSCP (6 bits), ECN (2 bits) --> 2 octets en tout
         packetByteCount += (int)dataInputStream.skip(2);
         // Total Length 
@@ -51,7 +51,7 @@ public class IPv4 {
         }
         System.out.println("Total Length hexa: " + totalLengthHexaSB.toString());*/
         this.totalLength = convertirEnDecimal(totalLengthBuffer);
-        System.out.println("Total Length: " + this.totalLength);
+        System.out.println("> Total Length: " + this.totalLength);
 
         // Identification
         byte [] identificationBuffer = new byte[2]; // Protocol type: 2 octets
@@ -61,7 +61,7 @@ public class IPv4 {
             identificationSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.indentification = identificationSB.toString();
-        System.out.println("Identification: " + this.indentification);
+        System.out.println("> Identification: " + this.indentification);
 
         // On saute: les flags (3 bits) et le Fragment Offset (13 bits) --> 2 octets en tout
         packetByteCount += (int)dataInputStream.skip(2);
@@ -74,7 +74,7 @@ public class IPv4 {
             ttlSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.ttl = ttlSB.toString();
-        System.out.println("Time to Live: " + this.ttl);
+        System.out.println("> Time to Live: " + this.ttl);
 
         // ProtocolNumber (17=UDP, 6=TCP)
         byte [] protocolBuffer = new byte[1]; // Protocol type: 2 octets
@@ -83,7 +83,7 @@ public class IPv4 {
         for (byte b : protocolBuffer)
             protocolSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         this.protocol = protocolSB.toString();
-        System.out.println("Protocol number: " + this.protocol);
+        System.out.println("> Protocol number: " + this.protocol);
         int protocolNumberInteger = -1; // -1 quand c'est pas reconnu/supporté par l'appli
         try{
             protocolNumberInteger = Integer.valueOf(this.protocol);
@@ -122,7 +122,7 @@ public class IPv4 {
         }
         compteurIp = 0;
         this.ipSrc = ipSrcSB.toString();
-        System.out.println("Source IP: " + this.ipSrc);
+        System.out.println("> Source IP: " + this.ipSrc);
 
         // IP Destination
         byte [] ipDestBuffer = new byte[4]; // Protocol type: 2 octets
@@ -136,7 +136,7 @@ public class IPv4 {
             
         compteurIp = 0;
         this.ipDest = ipDestSB.toString();
-        System.out.println("Destination IP: " + this.ipDest);
+        System.out.println("> Destination IP: " + this.ipDest);
         
         if (protocolNumberInteger == IPv4Types.UDP){
             if ((filter.equals("tcp")) || (filter.equals("icmp"))){
@@ -145,7 +145,6 @@ public class IPv4 {
             }
             else{
                 Udp updSegment = new Udp();
-                System.out.println("Bytes read so far: " + packetByteCount);
                 updSegment.readUdp(dataInputStream, packetLength, packetByteCount);
             }
             
@@ -158,7 +157,7 @@ public class IPv4 {
             }
             else{
                 Tcp tcpSegment = new Tcp();
-                System.out.println("Bytes read so far (before TCP): " + packetByteCount);
+                //System.out.println("Bytes read so far (before TCP): " + packetByteCount);
                 // On lit tous les headers et on calcule le payload à lire
                 // += car on renvoit la valeur du nb de bytes qu'on a lu depuis qu'on a commencé à parser les headers tcp
                 int tcpBytesRead = tcpSegment.readTcp(dataInputStream, packetLength, packetByteCount);

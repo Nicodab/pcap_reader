@@ -37,7 +37,7 @@ public class Dns {
     // Lire le Record DNS et son contenu
     public void readDns(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         
-        System.out.println("----------- DNS Records -----------");
+        System.out.println("\n----------- DNS Records -----------");
         //packetByteCount += dataInputStream.skip(2); // 2 octets pour le Transact° ID
 
 
@@ -47,7 +47,7 @@ public class Dns {
         for (byte b : transacBuffer){
             transacSB.append(String.format("%02X", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         }
-        System.out.println("Transac: " + transacSB.toString());
+        System.out.println("> Transacation: 0x" + transacSB.toString());
 
         // Flags --> On lit les 2 octets d'après mais en ralité, y'a que le 1er bit qui nous intéresse qui est le QR
         // Query quand QR = 0, response quand QR = 1
@@ -59,11 +59,11 @@ public class Dns {
             QR = getFirstBitFromByte(b);
         }
         this.flags = Integer.valueOf(flagSB.toString());
-        System.out.println("Flags: " + this.flags);
+        System.out.println("> Flags: " + this.flags);
         if (QR == 0)
-            System.out.println("Dns message: Query");
+            System.out.println("> Dns message: Query");
         else if (QR == 1)
-            System.out.println("Dns message: Response");
+            System.out.println("> Dns message: Response");
 
         packetByteCount += dataInputStream.skip(1); // 1 octet skippé car on prend que le 1er octet (sur 2) de flag
 
@@ -75,7 +75,7 @@ public class Dns {
             questionSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.question = Integer.valueOf(questionSB.toString());
-        System.out.println("Question: " + this.question);
+        System.out.println("> Question: " + this.question);
         
         // nbAnswerRR 
         byte [] nbAnswerRRBuffer = new byte[2]; // Protocol type: 2 octets
@@ -85,7 +85,7 @@ public class Dns {
             nbAnswerRRSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.nbAnswerRR = Integer.valueOf(nbAnswerRRSB.toString());
-        System.out.println("Answer RRs: " + this.nbAnswerRR);
+        System.out.println("> Answer RRs: " + this.nbAnswerRR);
 
         // nbAuthorityRR 
         byte [] nbAuthorityRRBuffer = new byte[2]; // Protocol type: 2 octets
@@ -95,7 +95,7 @@ public class Dns {
             nbAuthorityRRSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.nbAuthorityRR = Integer.valueOf(nbAuthorityRRSB.toString());
-        System.out.println("Authority RRs: " + this.nbAuthorityRR);
+        System.out.println("> Authority RRs: " + this.nbAuthorityRR);
 
         // nbAdditionalRR 
         byte [] nbAdditionalRRBuffer = new byte[2]; // Protocol type: 2 octets
@@ -105,7 +105,7 @@ public class Dns {
             nbAdditionalRRSB.append(String.format("%d", b & 0xFF)); // Masquage avec 0xFF pour afficher en décimal
         
         this.nbAdditionalRR = Integer.valueOf(nbAdditionalRRSB.toString());
-        System.out.println("Additional RRs: " + this.nbAdditionalRR);
+        System.out.println("> Additional RRs: " + this.nbAdditionalRR);
 
 
         // Questions à lire 
@@ -138,9 +138,6 @@ public class Dns {
             }
         }
 
-        //Le rest c'est le msg du DNS
-        // pour l'instant on skip
-        System.out.println("On saute la lecture du msg DNS car on ne sait pas lire pour le moment");
         dataInputStream.skip(packetLength-packetByteCount);
     }
 
@@ -155,10 +152,6 @@ public class Dns {
 
     public static int getFirstBitFromByte(byte octet){
         return (octet >> 7) & 1;
-    }
-
-    public static void readQName(){
-
     }
     
 }

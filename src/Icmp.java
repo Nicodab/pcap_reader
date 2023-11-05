@@ -18,18 +18,18 @@ public class Icmp {
     // Faire une classe ARP dans laquelle il y aurait cette fonction ainsi que ses propres attributs
     public int readIcmp(DataInputStream dataInputStream, int packetLength, int packetByteCount) throws IOException {
         //int bytesCountTcp = 0;
-        System.out.println("----------- ICMP protocol -----------");
+        System.out.println("\n----------- ICMP protocol -----------");
         // Message Type 
         byte [] messageTypeBuffer = new byte[1]; // message type: 2 octets
         packetByteCount += (int)dataInputStream.read(messageTypeBuffer);
         this.messageType = convertirEnDecimal(messageTypeBuffer);
-        System.out.println("Message Type: " + this.messageType);
+        System.out.println("> Message Type: " + this.messageType);
 
         // Hardware Type 
         byte [] errorCodeBuffer = new byte[1]; // Code: 1 octets
         packetByteCount += (int)dataInputStream.read(errorCodeBuffer);
         this.errorCode = convertirEnDecimal(errorCodeBuffer);
-        System.out.println("Code: " + this.errorCode);
+        System.out.println("> Code: " + this.errorCode);
 
         // Hardware Length 
         byte [] checksumBuffer = new byte[2]; // Protocol type: 2 octets
@@ -41,7 +41,7 @@ public class Icmp {
             checksumSB.append(String.format("%02X", b & 0xFF));
         }
         this.checksum = checksumSB.toString(); // affectation à l'attribut de la classe 
-        System.out.println("Checksum: " + this.checksum);
+        System.out.println("> Checksum: " + this.checksum);
         packetByteCount += dataInputStream.skip(packetLength-packetByteCount);
         return packetByteCount;
     }

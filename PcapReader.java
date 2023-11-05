@@ -17,13 +17,16 @@ public class PcapReader{
     private int nbFrames = 0;
     public static void main(String[] args) {
         System.out.println("begin");
-        if (args.length != 2) {
-            System.err.println("Usage: java PcapReader <pcap_file>");
+        if (args.length > 2) {
+            System.err.println("Usage: java PcapReader <pcap_file> [FILTER]\n-\tex: filter=tcp. If there are no filter specified, the program will parse every Ethernet Frame");
             System.exit(1);
         }
 
         String pcapFile = args[0];
-        String filter = args[1].split("=")[1].toLowerCase(); // ex: filter=tcp 
+        String filter = "";
+        if (args.length == 2)
+            filter = args[1].split("=")[1].toLowerCase(); // ex: filter=tcp --> On prend tcp
+        
         readPcapFile(pcapFile, filter);
     }
 
